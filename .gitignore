@@ -1,0 +1,20 @@
+# Subprojects — each has its own git repo
+cuarzito_race/
+orchestrator/
+password_android/
+password_qt/
+permission_android/
+permission_qt/
+phishing_android/
+phishing_qt/
+public_wifi/
+pulse_console/
+qr/
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Local assistant/tool settings
+.claude/settings.json
+.claude/settings.local.json
