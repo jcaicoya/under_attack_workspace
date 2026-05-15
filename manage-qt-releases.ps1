@@ -16,7 +16,8 @@ $projects = @(
     @{ Name = "phishing_qt" },
     @{ Name = "public_wifi" },
     @{ Name = "pulse_console" },
-    @{ Name = "qr" }
+    @{ Name = "qr" },
+    @{ Name = "cuarzito_race" }
 )
 
 function Invoke-GitSafe {

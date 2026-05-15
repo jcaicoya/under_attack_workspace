@@ -25,12 +25,13 @@ and `cybershow_app_standards_v0_3/CYBERSHOW_APP_CONVENTIONS.md`.
 | `public_wifi` | Public WiFi attack |
 | `qr` | QR code display |
 | `pulse_console` | Console / pulse display |
+| `cuarzito_race` | Pre-show arcade game |
 
 ## Non-subproject directories
 Everything else is tooling, assets, or legacy — not part of the show suite:
 `_release-work`, `adb-bridge`, `blender`, `cybershow_app_standards_v0_3`,
 `gemini-web`, `html-qrs`, `images`, `inkskape`, `old-wifi`, `movil-app`,
-`cuarzito_race`, `router-to-portatil-receiver`, `scrcpy-win64-v3.3.4`,
+`router-to-portatil-receiver`, `scrcpy-win64-v3.3.4`,
 `simple-console-message-app`, `skeleton`, `web-page`
 
 ---
