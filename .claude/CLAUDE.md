@@ -72,9 +72,9 @@ These rules are common across the paired modules and should stay aligned unless 
 - Orchestrator prepares the ADB reverse tunnel before launching the Android app.
 - Android tries `localhost:<PORT>` first and only falls back to UDP discovery if needed.
 - Release packaging is split by platform:
-  - Qt releases sync into `dist-qt/`
-  - Android releases sync into `dist-android/`
-- Android deployment to devices is done from `dist-android` via `deploy_android.ps1`.
+  - Qt releases sync into `dist_qt/`
+  - Android releases sync into `dist_android/`
+- Android deployment to devices is done from `dist_android` via `deploy_android.ps1`.
 
 ---
 

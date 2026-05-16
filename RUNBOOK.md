@@ -19,7 +19,7 @@ Ese comando:
 - bloquea proyectos con cambios locales sin commit
 - genera la nueva release cuando corresponde
 - actualiza `releases.json`
-- sincroniza `dist-qt/`
+- sincroniza `dist_qt/`
 - hace `git push origin <branch>`
 - hace `git push --tags`
 
@@ -64,8 +64,8 @@ Desactivar el push automatico:
 
 ### Estados Del Reporte
 
-- `released`: se ha generado una nueva version, se ha actualizado `releases.json`, se ha sincronizado `dist-qt` y se ha hecho push.
-- `synced`: ya no hacia falta una nueva version; solo se ha sincronizado `dist-qt` y se ha hecho push si hacia falta.
+- `released`: se ha generado una nueva version, se ha actualizado `releases.json`, se ha sincronizado `dist_qt` y se ha hecho push.
+- `synced`: ya no hacia falta una nueva version; solo se ha sincronizado `dist_qt` y se ha hecho push si hacia falta.
 - `blocked_dirty`: el proyecto tiene cambios locales sin commit y el script no ha actuado.
 - `blocked_tag_conflict`: el siguiente tag esperado ya existe en otro commit y el script se detiene para evitar una release incoherente.
 
@@ -84,7 +84,7 @@ El flujo normal debe ser siempre:
 Los zips nuevos usan el prefijo `bajo-ataque-...` y quedan:
 
 - en `dist\` dentro de cada proyecto
-- extraidos en `dist-qt/`
+- extraidos en `dist_qt/`
 
 ### Script Principal
 
@@ -107,7 +107,7 @@ Ese comando:
 - bloquea proyectos con cambios locales sin commit
 - genera `assembleRelease` cuando corresponde
 - actualiza `releases.json`
-- sincroniza `dist-android/`
+- sincroniza `dist_android/`
 - puede hacer `git push origin <branch>` y `git push --tags`
 
 ### Flujo Recomendado
@@ -152,9 +152,9 @@ Desactivar el push automatico:
 Los APKs release versionados quedan:
 
 - en `dist\` dentro de cada proyecto Android
-- sincronizados en `dist-android/<app>`
+- sincronizados en `dist_android/<app>`
 
-Cada carpeta estable de `dist-android` contiene:
+Cada carpeta estable de `dist_android` contiene:
 
 - `app-release.apk`
 - `version.json`
@@ -162,7 +162,7 @@ Cada carpeta estable de `dist-android` contiene:
 
 ### Despliegue En Dispositivos
 
-Para instalar o actualizar desde `dist-android`:
+Para instalar o actualizar desde `dist_android`:
 
 ```powershell
 .\deploy_android.ps1 -Action update -All

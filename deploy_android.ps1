@@ -10,7 +10,7 @@ param(
 $ErrorActionPreference = "Stop"
 $repoRoot = $PSScriptRoot
 if ([string]::IsNullOrWhiteSpace($DistAndroidDir)) {
-    $DistAndroidDir = Join-Path $repoRoot "dist-android"
+    $DistAndroidDir = Join-Path $repoRoot "dist_android"
 }
 
 $apps = @(

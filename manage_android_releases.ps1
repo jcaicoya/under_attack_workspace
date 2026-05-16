@@ -9,7 +9,7 @@ $ErrorActionPreference = "Stop"
 
 $repoRoot = $PSScriptRoot
 if ([string]::IsNullOrWhiteSpace($DistAndroidDir)) {
-    $DistAndroidDir = Join-Path $repoRoot "dist-android"
+    $DistAndroidDir = Join-Path $repoRoot "dist_android"
 }
 
 $projects = @(
@@ -199,7 +199,7 @@ foreach ($projectEntry in $selectedProjects) {
             ($lastAfter.apk -ne $lastBefore.apk) -or
             ($lastAfter.commit -ne $lastBefore.commit)
     } else {
-        Write-Host ">> HEAD already packaged as $($lastBefore.apk). Syncing dist-android only."
+        Write-Host ">> HEAD already packaged as $($lastBefore.apk). Syncing dist_android only."
         $lastAfter = $lastBefore
     }
 

@@ -71,15 +71,15 @@ Puertos actuales:
 En la raíz hay scripts que operan sobre varios repositorios a la vez:
 
 - `manage_qt_releases.ps1`
-  Genera y publica releases de las apps Qt y sincroniza `dist-qt/`.
+  Genera y publica releases de las apps Qt y sincroniza `dist_qt/`.
 
 - `manage_android_releases.ps1`
-  Genera y publica releases Android y sincroniza `dist-android/`.
+  Genera y publica releases Android y sincroniza `dist_android/`.
 
 - `deploy_android.ps1`
   Instala, actualiza o desinstala las apps Android en tablet o móvil vía `adb`.
 
-- `dist-multimedia/`
+- `dist_media/`
   Carpeta local para vídeos y audios que consume Orchestrator. No necesita estar bajo control de versiones.
 
 El flujo operativo completo está descrito en:
@@ -92,9 +92,9 @@ El flujo operativo completo está descrito en:
 - Los directorios locales usan guiones bajos.
 - Los nombres técnicos estables están en inglés.
 - Las distribuciones compartidas viven dentro del workspace:
-  - `dist-qt/`
-  - `dist-android/`
-  - `dist-multimedia/`
+  - `dist_qt/`
+  - `dist_android/`
+  - `dist_media/`
 - Cada subrepo debe contener su propia documentación específica.
 - Este repo raíz solo debe contener contexto transversal o compartido.
 

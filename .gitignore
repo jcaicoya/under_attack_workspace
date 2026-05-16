@@ -16,9 +16,9 @@ Thumbs.db
 desktop.ini
 
 # Shared local distributions
-dist-qt/
-dist-android/
-dist-multimedia/
+dist_qt/
+dist_android/
+dist_media/
 
 # Local assistant/tool settings
 .claude/settings.json

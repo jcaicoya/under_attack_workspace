@@ -9,7 +9,7 @@ $ErrorActionPreference = "Stop"
 
 $repoRoot = $PSScriptRoot
 if ([string]::IsNullOrWhiteSpace($DistQtDir)) {
-    $DistQtDir = Join-Path $repoRoot "dist-qt"
+    $DistQtDir = Join-Path $repoRoot "dist_qt"
 }
 
 $projects = @(
@@ -268,7 +268,7 @@ foreach ($projectEntry in $selectedProjects) {
             ($lastAfter.zip -ne $lastBefore.zip) -or
             ($lastAfter.commit -ne $lastBefore.commit)
     } else {
-        Write-Host ">> HEAD already packaged as $($lastBefore.zip). Syncing dist-qt only."
+        Write-Host ">> HEAD already packaged as $($lastBefore.zip). Syncing dist_qt only."
         $lastAfter = $lastBefore
     }
 
