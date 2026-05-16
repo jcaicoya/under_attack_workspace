@@ -83,8 +83,8 @@ El flujo normal debe ser siempre:
 
 Los zips nuevos usan el prefijo `bajo-ataque-...` y quedan:
 
-- en `dist\` dentro de cada proyecto
-- extraidos en `dist_qt/`
+- en `dist_qt/`
+- extraidos en `dist_qt/<proyecto>/`
 
 ### Script Principal
 
@@ -151,8 +151,8 @@ Desactivar el push automatico:
 
 Los APKs release versionados quedan:
 
-- en `dist\` dentro de cada proyecto Android
-- sincronizados en `dist_android/<app>`
+- en `dist_android/`
+- publicados en `dist_android/<app>`
 
 Cada carpeta estable de `dist_android` contiene:
 
@@ -162,16 +162,28 @@ Cada carpeta estable de `dist_android` contiene:
 
 ### Despliegue En Dispositivos
 
-Para instalar o actualizar desde `dist_android`:
+Primero, comprobar que el dispositivo esta visible por `adb`:
+
+```powershell
+.\deploy_android.ps1 -Action status
+```
+
+Para instalar las tres apps en un dispositivo limpio:
+
+```powershell
+.\deploy_android.ps1 -Action install -All
+```
+
+Para actualizar una instalacion existente manteniendo datos:
 
 ```powershell
 .\deploy_android.ps1 -Action update -All
 ```
 
-Para instalar limpio:
+Para actuar solo sobre una app:
 
 ```powershell
-.\deploy_android.ps1 -Action install -All
+.\deploy_android.ps1 -Action update -App permission_android
 ```
 
 Para desinstalar todas las apps:
@@ -180,15 +192,106 @@ Para desinstalar todas las apps:
 .\deploy_android.ps1 -Action uninstall -All
 ```
 
-Para consultar estado del dispositivo y de las apps:
+Para desinstalar una sola:
+
+```powershell
+.\deploy_android.ps1 -Action uninstall -App permission_android
+```
+
+### Permisos Reales Recomendados
+
+Despues de instalar:
+
+- `password_android`
+  - notificaciones
+- `phishing_android`
+  - notificaciones
+- `permission_android`
+  - notificaciones
+  - mostrar sobre otras apps
+  - `Device Admin`
+  - camara
+  - microfono
+  - bateria sin restricciones si el dispositivo lo separa
+
+### Regla Operativa Importante Sobre Firma
+
+Se asume una unica firma `release` estable para las tres apps Android.
+
+Con esta firma estable:
+
+- `install` instala desde cero
+- `update` actualiza encima sin desinstalar
+
+Solo hay que desinstalar antes si se arrastra una app antigua firmada con otra clave.
+
+### Desinstalar Una App Antigua Con `Device Admin`
+
+Caso tipico:
+
+- la app antigua es `com.cuarzopolar.companion`
+- tiene `Device Admin`
+- `adb uninstall` falla aunque ya no se use
+
+Procedimiento:
+
+1. localizar el paquete si hace falta:
+
+```powershell
+& 'C:\Users\caico\AppData\Local\Android\Sdk\platform-tools\adb.exe' shell pm list packages | findstr cuarzopolar
+```
+
+2. comprobar el admin activo:
+
+```powershell
+& 'C:\Users\caico\AppData\Local\Android\Sdk\platform-tools\adb.exe' shell dumpsys device_policy | findstr /i cuarzopolar
+```
+
+3. quitar el admin activo:
+
+```powershell
+& 'C:\Users\caico\AppData\Local\Android\Sdk\platform-tools\adb.exe' shell dpm remove-active-admin com.cuarzopolar.companion/.CompanionDeviceAdminReceiver
+```
+
+4. desinstalar la app antigua para el usuario principal:
+
+```powershell
+& 'C:\Users\caico\AppData\Local\Android\Sdk\platform-tools\adb.exe' shell pm uninstall --user 0 com.cuarzopolar.companion
+```
+
+5. verificar que ya no queda instalada:
+
+```powershell
+& 'C:\Users\caico\AppData\Local\Android\Sdk\platform-tools\adb.exe' shell pm list packages | findstr cuarzopolar
+```
+
+### Flujo Operativo Recomendado
+
+1. generar releases:
+
+```powershell
+.\manage_android_releases.ps1
+```
+
+2. comprobar `adb`:
 
 ```powershell
 .\deploy_android.ps1 -Action status
 ```
 
-### Regla Operativa Importante
+3. si es una instalacion nueva:
 
-Android usa builds `release` firmadas. Si cambia la firma, Android no permite actualizar encima y hay que desinstalar e instalar de nuevo.
+```powershell
+.\deploy_android.ps1 -Action install -All
+```
+
+4. si ya estaban instaladas con la firma actual:
+
+```powershell
+.\deploy_android.ps1 -Action update -All
+```
+
+5. conceder los permisos reales necesarios, sobre todo en `permission_android`
 
 ### Scripts Principales
 
