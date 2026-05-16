@@ -1,5 +1,5 @@
 param(
-    [string]$DistQtDir = "C:\Users\caico\Desktop\CUARZOPOLAR\dist-qt",
+    [string]$DistQtDir = "",
     [string[]]$Project = @(),
     [switch]$AllowDirty,
     [switch]$SkipPush
@@ -8,6 +8,9 @@ param(
 $ErrorActionPreference = "Stop"
 
 $repoRoot = $PSScriptRoot
+if ([string]::IsNullOrWhiteSpace($DistQtDir)) {
+    $DistQtDir = Join-Path $repoRoot "dist-qt"
+}
 
 $projects = @(
     @{ Name = "permission_qt" },
@@ -243,10 +246,10 @@ foreach ($projectEntry in $selectedProjects) {
     $releaseChanged = $false
 
     if (-not $alreadyPackaged) {
-        Write-Host ">> Running package-release.ps1 on branch $branch..."
+        Write-Host ">> Running package_release.ps1 on branch $branch..."
         Push-Location $sourceRepo
         try {
-            & "C:\Program Files\PowerShell\7\pwsh.exe" -File ".\package-release.ps1"
+            & "C:\Program Files\PowerShell\7\pwsh.exe" -File ".\package_release.ps1"
         } finally {
             Pop-Location
         }

@@ -1,5 +1,5 @@
 param(
-    [string]$DistAndroidDir = "C:\Users\caico\Desktop\CUARZOPOLAR\dist-android",
+    [string]$DistAndroidDir = "",
     [string[]]$Project = @(),
     [switch]$AllowDirty,
     [switch]$SkipPush
@@ -8,6 +8,9 @@ param(
 $ErrorActionPreference = "Stop"
 
 $repoRoot = $PSScriptRoot
+if ([string]::IsNullOrWhiteSpace($DistAndroidDir)) {
+    $DistAndroidDir = Join-Path $repoRoot "dist-android"
+}
 
 $projects = @(
     @{ Name = "password_android" },
@@ -178,10 +181,10 @@ foreach ($projectEntry in $selectedProjects) {
 
     $releaseChanged = $false
     if (-not $alreadyPackaged) {
-        Write-Host ">> Running package-release.ps1 on branch $branch..."
+        Write-Host ">> Running package_release.ps1 on branch $branch..."
         Push-Location $sourceRepo
         try {
-            & "C:\Program Files\PowerShell\7\pwsh.exe" -File ".\package-release.ps1"
+            & "C:\Program Files\PowerShell\7\pwsh.exe" -File ".\package_release.ps1"
         } finally {
             Pop-Location
         }

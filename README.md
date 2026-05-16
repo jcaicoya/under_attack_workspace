@@ -70,14 +70,17 @@ Puertos actuales:
 
 En la raíz hay scripts que operan sobre varios repositorios a la vez:
 
-- `manage-qt-releases.ps1`
-  Genera y publica releases de las apps Qt y sincroniza `C:\Users\caico\Desktop\CUARZOPOLAR\dist-qt`.
+- `manage_qt_releases.ps1`
+  Genera y publica releases de las apps Qt y sincroniza `dist-qt/`.
 
-- `manage-android-releases.ps1`
-  Genera y publica releases Android y sincroniza `C:\Users\caico\Desktop\CUARZOPOLAR\dist-android`.
+- `manage_android_releases.ps1`
+  Genera y publica releases Android y sincroniza `dist-android/`.
 
-- `deploy-android.ps1`
+- `deploy_android.ps1`
   Instala, actualiza o desinstala las apps Android en tablet o móvil vía `adb`.
+
+- `dist-multimedia/`
+  Carpeta local para vídeos y audios que consume Orchestrator. No necesita estar bajo control de versiones.
 
 El flujo operativo completo está descrito en:
 
@@ -88,6 +91,10 @@ El flujo operativo completo está descrito en:
 - Los repositorios GitHub usan la convención `under_attack_*`.
 - Los directorios locales usan guiones bajos.
 - Los nombres técnicos estables están en inglés.
+- Las distribuciones compartidas viven dentro del workspace:
+  - `dist-qt/`
+  - `dist-android/`
+  - `dist-multimedia/`
 - Cada subrepo debe contener su propia documentación específica.
 - Este repo raíz solo debe contener contexto transversal o compartido.
 

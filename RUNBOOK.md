@@ -9,7 +9,7 @@ Este documento resume el flujo recomendado para generar, publicar y desplegar ve
 Desde la raiz:
 
 ```powershell
-.\manage-qt-releases.ps1
+.\manage_qt_releases.ps1
 ```
 
 Ese comando:
@@ -19,7 +19,7 @@ Ese comando:
 - bloquea proyectos con cambios locales sin commit
 - genera la nueva release cuando corresponde
 - actualiza `releases.json`
-- sincroniza `C:\Users\caico\Desktop\CUARZOPOLAR\dist-qt`
+- sincroniza `dist-qt/`
 - hace `git push origin <branch>`
 - hace `git push --tags`
 
@@ -31,19 +31,19 @@ Ese comando:
 4. Ejecutar:
 
 ```powershell
-.\manage-qt-releases.ps1
+.\manage_qt_releases.ps1
 ```
 
 ### Ejecutar Solo Algunos Proyectos
 
 ```powershell
-.\manage-qt-releases.ps1 -Project qr,password_qt,phishing_qt
+.\manage_qt_releases.ps1 -Project qr,password_qt,phishing_qt
 ```
 
 Tambien se puede pasar un solo proyecto:
 
 ```powershell
-.\manage-qt-releases.ps1 -Project qr
+.\manage_qt_releases.ps1 -Project qr
 ```
 
 ### Flags Utiles
@@ -51,7 +51,7 @@ Tambien se puede pasar un solo proyecto:
 Permitir release aunque el repo tenga cambios sin commit:
 
 ```powershell
-.\manage-qt-releases.ps1 -AllowDirty
+.\manage_qt_releases.ps1 -AllowDirty
 ```
 
 No recomendado salvo caso excepcional.
@@ -59,7 +59,7 @@ No recomendado salvo caso excepcional.
 Desactivar el push automatico:
 
 ```powershell
-.\manage-qt-releases.ps1 -SkipPush
+.\manage_qt_releases.ps1 -SkipPush
 ```
 
 ### Estados Del Reporte
@@ -77,18 +77,18 @@ El flujo normal debe ser siempre:
 
 1. cambiar codigo
 2. hacer commit
-3. ejecutar `.\manage-qt-releases.ps1`
+3. ejecutar `.\manage_qt_releases.ps1`
 
 ### Salidas Esperadas
 
 Los zips nuevos usan el prefijo `bajo-ataque-...` y quedan:
 
 - en `dist\` dentro de cada proyecto
-- extraidos en `C:\Users\caico\Desktop\CUARZOPOLAR\dist-qt`
+- extraidos en `dist-qt/`
 
 ### Script Principal
 
-[manage-qt-releases.ps1](C:/Users/caico/Desktop/CUARZOPOLAR/bajo-ataque/manage-qt-releases.ps1)
+[manage_qt_releases.ps1](C:/Users/caico/Desktop/CUARZOPOLAR/bajo-ataque/manage_qt_releases.ps1)
 
 ## Android
 
@@ -97,7 +97,7 @@ Los zips nuevos usan el prefijo `bajo-ataque-...` y quedan:
 Desde la raiz:
 
 ```powershell
-.\manage-android-releases.ps1
+.\manage_android_releases.ps1
 ```
 
 Ese comando:
@@ -107,7 +107,7 @@ Ese comando:
 - bloquea proyectos con cambios locales sin commit
 - genera `assembleRelease` cuando corresponde
 - actualiza `releases.json`
-- sincroniza `C:\Users\caico\Desktop\CUARZOPOLAR\dist-android`
+- sincroniza `dist-android/`
 - puede hacer `git push origin <branch>` y `git push --tags`
 
 ### Flujo Recomendado
@@ -118,19 +118,19 @@ Ese comando:
 4. Ejecutar:
 
 ```powershell
-.\manage-android-releases.ps1
+.\manage_android_releases.ps1
 ```
 
 ### Ejecutar Solo Algunas Apps
 
 ```powershell
-.\manage-android-releases.ps1 -Project password_android,phishing_android
+.\manage_android_releases.ps1 -Project password_android,phishing_android
 ```
 
 Tambien se puede pasar una sola:
 
 ```powershell
-.\manage-android-releases.ps1 -Project permission_android
+.\manage_android_releases.ps1 -Project permission_android
 ```
 
 ### Flags Utiles
@@ -138,13 +138,13 @@ Tambien se puede pasar una sola:
 Permitir release aunque el repo tenga cambios sin commit:
 
 ```powershell
-.\manage-android-releases.ps1 -AllowDirty
+.\manage_android_releases.ps1 -AllowDirty
 ```
 
 Desactivar el push automatico:
 
 ```powershell
-.\manage-android-releases.ps1 -SkipPush
+.\manage_android_releases.ps1 -SkipPush
 ```
 
 ### Salidas Esperadas
@@ -152,7 +152,7 @@ Desactivar el push automatico:
 Los APKs release versionados quedan:
 
 - en `dist\` dentro de cada proyecto Android
-- sincronizados en `C:\Users\caico\Desktop\CUARZOPOLAR\dist-android\<app>`
+- sincronizados en `dist-android/<app>`
 
 Cada carpeta estable de `dist-android` contiene:
 
@@ -165,25 +165,25 @@ Cada carpeta estable de `dist-android` contiene:
 Para instalar o actualizar desde `dist-android`:
 
 ```powershell
-.\deploy-android.ps1 -Action update -All
+.\deploy_android.ps1 -Action update -All
 ```
 
 Para instalar limpio:
 
 ```powershell
-.\deploy-android.ps1 -Action install -All
+.\deploy_android.ps1 -Action install -All
 ```
 
 Para desinstalar todas las apps:
 
 ```powershell
-.\deploy-android.ps1 -Action uninstall -All
+.\deploy_android.ps1 -Action uninstall -All
 ```
 
 Para consultar estado del dispositivo y de las apps:
 
 ```powershell
-.\deploy-android.ps1 -Action status
+.\deploy_android.ps1 -Action status
 ```
 
 ### Regla Operativa Importante
@@ -192,5 +192,5 @@ Android usa builds `release` firmadas. Si cambia la firma, Android no permite ac
 
 ### Scripts Principales
 
-- [manage-android-releases.ps1](C:/Users/caico/Desktop/CUARZOPOLAR/bajo-ataque/manage-android-releases.ps1)
-- [deploy-android.ps1](C:/Users/caico/Desktop/CUARZOPOLAR/bajo-ataque/deploy-android.ps1)
+- [manage_android_releases.ps1](C:/Users/caico/Desktop/CUARZOPOLAR/bajo-ataque/manage_android_releases.ps1)
+- [deploy_android.ps1](C:/Users/caico/Desktop/CUARZOPOLAR/bajo-ataque/deploy_android.ps1)

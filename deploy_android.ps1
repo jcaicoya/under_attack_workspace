@@ -4,10 +4,14 @@ param(
     [string[]]$App = @(),
     [switch]$All,
     [string]$Serial,
-    [string]$DistAndroidDir = "C:\Users\caico\Desktop\CUARZOPOLAR\dist-android"
+    [string]$DistAndroidDir = ""
 )
 
 $ErrorActionPreference = "Stop"
+$repoRoot = $PSScriptRoot
+if ([string]::IsNullOrWhiteSpace($DistAndroidDir)) {
+    $DistAndroidDir = Join-Path $repoRoot "dist-android"
+}
 
 $apps = @(
     @{
