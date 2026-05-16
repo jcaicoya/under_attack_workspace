@@ -151,22 +151,6 @@ function Get-UpstreamRef {
     return ($upstream | Select-Object -First 1).Trim()
 }
 
-function Expand-ReleaseZip {
-    param(
-        [string]$ZipPath,
-        [string]$DestinationRoot,
-        [string]$ProjectName
-    )
-
-    $destination = Join-Path $DestinationRoot $ProjectName
-    if (Test-Path $destination) {
-        Remove-Item -LiteralPath $destination -Recurse -Force
-    }
-    New-Item -ItemType Directory -Path $destination | Out-Null
-    Expand-Archive -LiteralPath $ZipPath -DestinationPath $destination -Force
-    return $destination
-}
-
 if (-not (Test-Path $DistQtDir)) {
     New-Item -ItemType Directory -Path $DistQtDir | Out-Null
 }
@@ -204,6 +188,8 @@ foreach ($projectEntry in $selectedProjects) {
         $lastBefore.commit -eq $packageCommit -or
         $lastBefore.commit -eq $headCommit
     )
+    $expectedDistFolder = Join-Path $DistQtDir $name
+    $publishedAlready = $alreadyPackaged -and (Test-Path $expectedDistFolder) -and (Test-Path (Join-Path $expectedDistFolder $lastBefore.zip))
     $nextVersion = if ($lastBefore) { [int]$lastBefore.version + 1 } else { 0 }
     $nextTag = "v{0:D2}" -f $nextVersion
     $tagExists = (& git "-c" "safe.directory=*" "-C" $sourceRepo tag --list $nextTag | Measure-Object).Count -gt 0
@@ -245,7 +231,7 @@ foreach ($projectEntry in $selectedProjects) {
 
     $releaseChanged = $false
 
-    if (-not $alreadyPackaged) {
+    if (-not $publishedAlready) {
         Write-Host ">> Running package_release.ps1 on branch $branch..."
         Push-Location $sourceRepo
         try {
@@ -268,28 +254,20 @@ foreach ($projectEntry in $selectedProjects) {
             ($lastAfter.zip -ne $lastBefore.zip) -or
             ($lastAfter.commit -ne $lastBefore.commit)
     } else {
-        Write-Host ">> HEAD already packaged as $($lastBefore.zip). Syncing dist_qt only."
+        Write-Host ">> HEAD already packaged as $($lastBefore.zip). Verifying dist_qt only."
         $lastAfter = $lastBefore
     }
 
     $zipName = $lastAfter.zip
     $versionTag = "v{0:D2}" -f [int]$lastAfter.version
-    $zipSource = Join-Path $sourceRepo ("dist\" + $zipName)
-    if (-not (Test-Path $zipSource)) {
-        throw "Expected zip not found for ${name}: $zipSource"
+    $distFolder = $expectedDistFolder
+    $zipPath = Join-Path $distFolder $zipName
+    if (-not (Test-Path $distFolder)) {
+        throw "Expected dist_qt folder not found for ${name}: $distFolder"
     }
-
-    $repoDist = Join-Path $sourceRepo "dist"
-    if (-not (Test-Path $repoDist)) {
-        New-Item -ItemType Directory -Path $repoDist | Out-Null
+    if (-not (Test-Path $zipPath)) {
+        throw "Expected zip not found for ${name}: $zipPath"
     }
-
-    $zipDest = Join-Path $repoDist $zipName
-    if ($zipSource -ne $zipDest) {
-        Copy-Item -LiteralPath $zipSource -Destination $zipDest -Force
-    }
-
-    $distFolder = Expand-ReleaseZip -ZipPath $zipDest -DestinationRoot $DistQtDir -ProjectName $name
 
     $finalTagExists = (& git "-c" "safe.directory=*" "-C" $sourceRepo tag --list $versionTag | Measure-Object).Count -gt 0
     if (-not $finalTagExists) {

@@ -19,6 +19,7 @@ desktop.ini
 dist_qt/
 dist_android/
 dist_media/
+under_attack_release.jks
 
 # Local assistant/tool settings
 .claude/settings.json

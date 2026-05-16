@@ -103,27 +103,6 @@ function Get-UpstreamRef {
     return ($upstream | Select-Object -First 1).Trim()
 }
 
-function Sync-AndroidDist {
-    param(
-        [string]$RepoPath,
-        [string]$ProjectName,
-        [string]$DestinationRoot,
-        [string]$ApkName
-    )
-
-    $destination = Join-Path $DestinationRoot $ProjectName
-    if (Test-Path $destination) {
-        Remove-Item -LiteralPath $destination -Recurse -Force
-    }
-    New-Item -ItemType Directory -Path $destination | Out-Null
-
-    Copy-Item (Join-Path $RepoPath ("dist\" + $ApkName)) (Join-Path $destination "app-release.apk")
-    Copy-Item (Join-Path $RepoPath "dist\version.json") $destination
-    Copy-Item (Join-Path $RepoPath "dist\BUILD_INFO.txt") $destination
-
-    return $destination
-}
-
 if (-not (Test-Path $DistAndroidDir)) {
     New-Item -ItemType Directory -Path $DistAndroidDir | Out-Null
 }
@@ -161,6 +140,13 @@ foreach ($projectEntry in $selectedProjects) {
         $lastBefore.commit -eq $packageCommit -or
         $lastBefore.commit -eq $headCommit
     )
+    $expectedDistFolder = Join-Path $DistAndroidDir $name
+    $publishedAlready = $alreadyPackaged -and
+        (Test-Path $expectedDistFolder) -and
+        (Test-Path (Join-Path $expectedDistFolder $lastBefore.apk)) -and
+        (Test-Path (Join-Path $expectedDistFolder "app-release.apk")) -and
+        (Test-Path (Join-Path $expectedDistFolder "version.json")) -and
+        (Test-Path (Join-Path $expectedDistFolder "BUILD_INFO.txt"))
 
     Write-Host ""
     Write-Host "=== $name ==="
@@ -180,7 +166,7 @@ foreach ($projectEntry in $selectedProjects) {
     }
 
     $releaseChanged = $false
-    if (-not $alreadyPackaged) {
+    if (-not $publishedAlready) {
         Write-Host ">> Running package_release.ps1 on branch $branch..."
         Push-Location $sourceRepo
         try {
@@ -199,16 +185,20 @@ foreach ($projectEntry in $selectedProjects) {
             ($lastAfter.apk -ne $lastBefore.apk) -or
             ($lastAfter.commit -ne $lastBefore.commit)
     } else {
-        Write-Host ">> HEAD already packaged as $($lastBefore.apk). Syncing dist_android only."
+        Write-Host ">> HEAD already packaged as $($lastBefore.apk). Verifying dist_android only."
         $lastAfter = $lastBefore
     }
 
     $apkName = $lastAfter.apk
     $versionTag = "v{0:D2}" -f [int]$lastAfter.version
-    $apkSource = Join-Path $sourceRepo ("dist\" + $apkName)
-    if (-not (Test-Path $apkSource)) { throw "Expected APK not found for ${name}: $apkSource" }
-
-    $distFolder = Sync-AndroidDist -RepoPath $sourceRepo -ProjectName $name -DestinationRoot $DistAndroidDir -ApkName $apkName
+    $distFolder = $expectedDistFolder
+    $apkPath = Join-Path $distFolder $apkName
+    $stableApkPath = Join-Path $distFolder "app-release.apk"
+    if (-not (Test-Path $distFolder)) { throw "Expected dist_android folder not found for ${name}: $distFolder" }
+    if (-not (Test-Path $apkPath)) { throw "Expected APK not found for ${name}: $apkPath" }
+    if (-not (Test-Path $stableApkPath)) { throw "Expected stable APK not found for ${name}: $stableApkPath" }
+    if (-not (Test-Path (Join-Path $distFolder "version.json"))) { throw "Expected version.json not found for ${name}: $distFolder" }
+    if (-not (Test-Path (Join-Path $distFolder "BUILD_INFO.txt"))) { throw "Expected BUILD_INFO.txt not found for ${name}: $distFolder" }
 
     if ($releaseChanged) {
         Invoke-GitSafe -RepoPath $sourceRepo -GitArgs @("add", "releases.json")
