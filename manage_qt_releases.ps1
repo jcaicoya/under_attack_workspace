@@ -189,7 +189,8 @@ foreach ($projectEntry in $selectedProjects) {
         $lastBefore.commit -eq $headCommit
     )
     $expectedDistFolder = Join-Path $DistQtDir $name
-    $publishedAlready = $alreadyPackaged -and (Test-Path $expectedDistFolder) -and (Test-Path (Join-Path $expectedDistFolder $lastBefore.zip))
+    $expectedZipPath = if ($lastBefore) { Join-Path $DistQtDir $lastBefore.zip } else { $null }
+    $publishedAlready = $alreadyPackaged -and (Test-Path $expectedDistFolder) -and $expectedZipPath -and (Test-Path $expectedZipPath)
     $nextVersion = if ($lastBefore) { [int]$lastBefore.version + 1 } else { 0 }
     $nextTag = "v{0:D2}" -f $nextVersion
     $tagExists = (& git "-c" "safe.directory=*" "-C" $sourceRepo tag --list $nextTag | Measure-Object).Count -gt 0
@@ -261,7 +262,7 @@ foreach ($projectEntry in $selectedProjects) {
     $zipName = $lastAfter.zip
     $versionTag = "v{0:D2}" -f [int]$lastAfter.version
     $distFolder = $expectedDistFolder
-    $zipPath = Join-Path $distFolder $zipName
+    $zipPath = Join-Path $DistQtDir $zipName
     if (-not (Test-Path $distFolder)) {
         throw "Expected dist_qt folder not found for ${name}: $distFolder"
     }
