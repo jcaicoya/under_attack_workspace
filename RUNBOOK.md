@@ -90,6 +90,36 @@ Los zips nuevos usan el prefijo `bajo-ataque-...` y quedan:
 
 [manage_qt_releases.ps1](C:/Users/caico/Desktop/CUARZOPOLAR/bajo-ataque/manage_qt_releases.ps1)
 
+### Preparar `dist_qt` Para El Portatil De Ensayo
+
+Si en otro ordenador solo mantienes `dist_qt/` con zips y carpetas ya desplegadas, puedes normalizarlo desde la raiz con:
+
+```powershell
+.\refresh_backup_qt_dist.ps1
+```
+
+Ese script:
+
+- conserva solo el zip mas reciente de cada proyecto Qt
+- borra los zips antiguos
+- desbloquea los zips conservados para evitar avisos de seguridad al abrirlos
+- vuelve a desplegar cada proyecto en `dist_qt/<proyecto>/`
+- desbloquea tambien los archivos extraidos
+- deja las carpetas sin sufijo de version
+
+Para probarlo sobre una copia:
+
+```powershell
+Copy-Item .\dist_qt .\dist_qt_copy -Recurse
+.\refresh_backup_qt_dist.ps1 -DistQtDir .\dist_qt_copy
+```
+
+Modo simulacion:
+
+```powershell
+.\refresh_backup_qt_dist.ps1 -WhatIf
+```
+
 ## Android
 
 ### Generar Releases
