@@ -24,3 +24,7 @@ under_attack_release.jks
 # Local assistant/tool settings
 .claude/settings.json
 .claude/settings.local.json
+
+# Local secrets
+.secrets/
+backup_laptop_credential.xml

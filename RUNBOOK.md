@@ -120,6 +120,54 @@ Modo simulacion:
 .\refresh_backup_qt_dist.ps1 -WhatIf
 ```
 
+### Sincronizar El Portatil De Ensayo Por Red
+
+Si el portatil backup expone `bajo-ataque` por SMB, puedes sincronizar `dist_qt` y `dist_media` desde la raiz con:
+
+```powershell
+.\sync_backup_laptop.ps1
+```
+
+Ese script:
+
+- refresca antes `dist_qt` salvo que se use `-SkipRefresh`
+- copia `dist_qt` al recurso remoto
+- copia `dist_media` al recurso remoto
+- no toca `dist_android`
+
+Modo simulacion:
+
+```powershell
+.\sync_backup_laptop.ps1 -WhatIf
+```
+
+Si cambia la ruta remota:
+
+```powershell
+.\sync_backup_laptop.ps1 -RemoteRoot \\192.168.0.84\bajo_ataque
+```
+
+Si quieres usar un archivo local de credenciales:
+
+```powershell
+$cred = Import-Clixml .\.secrets\backup_laptop_credential.xml
+.\sync_backup_laptop.ps1 -Credential $cred
+```
+
+Para crear ese archivo una sola vez:
+
+```powershell
+New-Item -ItemType Directory .\.secrets -ErrorAction SilentlyContinue
+$cred = Get-Credential
+$cred | Export-Clixml .\.secrets\backup_laptop_credential.xml
+```
+
+Usa como usuario remoto:
+
+```text
+DESKTOP-NDUHUKT\backupsync
+```
+
 ## Android
 
 ### Generar Releases
