@@ -1,50 +1,34 @@
 # NEXT_STEPS — Bajo Ataque
 
-## Done
-- [x] Create `~/.claude/CLAUDE.md` — global AI rules
-- [x] Create `.claude/CLAUDE.md` — project context (app map, orchestrator, look & feel)
-- [x] Create `CODEX.md` — Codex entry point
-- [x] Create `NEXT_STEPS.md` — this file
-- [x] Rename `phising` → `phishing_qt`
-- [x] Create `phishing_android` app
-- [x] Rename directories, apps, and GitHub repos (`ataque-inicial` → `permission_qt`, `android-companion` → `permission_android`)
-- [x] Fix Android app names: `permission_android` → "Permission", others correct
-- [x] Fix Android launcher icons: each app uses its own cuarzito color (green/amber/red), dark background
-- [x] Fix `password_qt` WebSocket server: single client, heartbeat/pong, UDP beacon — matches phishing/permission pattern
-- [x] Fix `password_android` connection: WebSocketManager + PasswordService + UDP discovery — matches phishing/permission pattern
-- [x] Standardize cuarzito connection state colors across all three Android pairs (green=connected, amber=connecting, blue=disconnected)
+## Hecho
 
-## Pending
+- [x] Crear `~/.claude/CLAUDE.md` con reglas globales
+- [x] Crear `.claude/CLAUDE.md` de raíz con contexto del proyecto
+- [x] Crear `CODEX.md` de raíz
+- [x] Estandarizar la estructura documental en raíz y subproyectos:
+  - `README.md`
+  - `RUNBOOK.md`
+  - `NEXT_STEPS.md`
+  - `.claude/CLAUDE.md`
+  - `CODEX.md`
+- [x] Crear `phishing_android`
+- [x] Renombrar `phising` a `phishing_qt`
+- [x] Renombrar proyectos y repositorios históricos a `permission_*`
+- [x] Unificar los `CODEX.md`
+- [x] Hacer que los empaquetadores Qt incluyan `RUNBOOK.md` y no `README.md`
 
-1. Evolve `phishing_qt` screens 1–4 (message builder) and screen 5 (climax)
-2. Evolve `phishing_android` to show incoming SMS and handle link tap
-3. Add `phishing_qt` + `phishing_android` to Orchestrator
-4. Add `password_qt` + `password_android` to Orchestrator (config exists; verify ADB tunnel port 8767)
-5. Implement Orchestrator → Qt app command channel via stdin (see architecture note below)
-6. Analyze whether to include Cuarzito Race into Orchestrator
+## Pendiente
 
----
+- [ ] Evolucionar `phishing_qt` (pantallas builder y clímax).
+- [ ] Integrar `phishing_qt` y `phishing_android` en Orchestrator.
+- [ ] Verificar la integración efectiva de `password_qt` y `password_android` en Orchestrator.
+- [ ] Implementar el canal de comandos Orchestrator -> apps Qt por stdin si se confirma como siguiente paso.
+- [ ] Decidir si `cuarzito_race` debe integrarse o no en Orchestrator.
 
-## Architecture: Orchestrator command channel (stdin IPC)
+## Nota de arquitectura
 
-**Decision:** Orchestrator sends commands to running Qt apps via their **stdin** (QProcess write).
-Apps listen with `QSocketNotifier` on fd 0 and handle `CYBERSHOW_CMD` tokens.
-Standalone mode is unaffected — if stdin is idle or closed, apps behave exactly as today.
+La línea de trabajo más relevante a nivel raíz sigue siendo el canal de comandos de Orchestrator hacia las apps Qt por stdin:
 
-**Protocol (Orchestrator → app):**
-```
-CYBERSHOW_CMD NEXT_SCREEN
-CYBERSHOW_CMD PREV_SCREEN
-CYBERSHOW_CMD ACTION <id>
-CYBERSHOW_CMD TRIGGER <name>
-```
-
-**Orchestrator UI:** contextual action buttons that update automatically based on
-`CYBERSHOW_SCREEN` messages received from the active app.
-
-**Performance:** zero overhead — event-driven, no polling, kernel pipe, microsecond latency.
-
-**Risks (all low):**
-- Blocking write if app hangs → use non-blocking QProcess write
-- Broken pipe on app crash → QProcess `finished()` already signals this
-- Garbage input in standalone mode → parser ignores lines without `CYBERSHOW_CMD` prefix
+- comandos del tipo `CYBERSHOW_CMD ...`
+- apps escuchando con `QSocketNotifier`
+- mantenimiento del comportamiento standalone cuando stdin no se use

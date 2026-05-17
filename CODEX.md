@@ -1,5 +1,4 @@
-# Codex — Entry point
+Read and apply these files in order:
 
-Before starting any task, read and apply the rules in:
-
-- `.claude/CLAUDE.md`
+1. `~/.claude/CLAUDE.md`
+2. `./.claude/CLAUDE.md`

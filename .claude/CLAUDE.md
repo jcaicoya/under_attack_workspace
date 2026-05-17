@@ -2,8 +2,22 @@
 
 Theatrical cybershow suite. All apps are scripted theatre — no real hacking.
 Each subproject has its own `.claude/CLAUDE.md` with its specific details.
-Full Qt standards: `cybershow_app_standards_v0_3/QT_APP_LOOK_AND_FEEL.md`
-and `cybershow_app_standards_v0_3/CYBERSHOW_APP_CONVENTIONS.md`.
+
+## Required Reading
+
+Before working in this directory, read and apply:
+
+- `README.md`
+- `RUNBOOK.md`
+- `NEXT_STEPS.md`
+
+## Documentation Maintenance
+
+- `README.md` must describe the project, architecture, design, and technology.
+- `RUNBOOK.md` must contain deploy, launch, and operational instructions.
+- `NEXT_STEPS.md` must contain the next pending work items.
+- After each commit, keep these files updated so they reflect the real current state of the project.
+- Do not duplicate the same information across these files unless there is a strong reason.
 
 ## App Map
 
@@ -29,7 +43,7 @@ and `cybershow_app_standards_v0_3/CYBERSHOW_APP_CONVENTIONS.md`.
 
 ## Non-subproject directories
 Everything else is tooling, assets, or legacy — not part of the show suite:
-`_release-work`, `adb-bridge`, `blender`, `cybershow_app_standards_v0_3`,
+`_release-work`, `adb-bridge`, `blender`,
 `gemini-web`, `html-qrs`, `images`, `inkskape`, `old-wifi`, `movil-app`,
 `router-to-portatil-receiver`, `scrcpy-win64-v3.3.4`,
 `simple-console-message-app`, `skeleton`, `web-page`
@@ -80,7 +94,7 @@ These rules are common across the paired modules and should stay aligned unless 
 
 ## Common Qt Look & Feel
 
-Full spec in `cybershow_app_standards_v0_3/`. Key rules summarised here.
+Key rules summarised here.
 
 ### Aesthetic
 Dark, technical, cyber, sober. All apps share `CyberBackgroundWidget`:
